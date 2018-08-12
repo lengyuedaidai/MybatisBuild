@@ -1,0 +1,7 @@
+package ${fileInfoMap.serviceClassFile.packageName};
+
+import com.account.gms.core.generic.GenericService;
+import ${fileInfoMap.modelClassFile.packageName}.${fileInfoMap.modelClassFile.name};
+
+public interface ${fileInfoMap.serviceClassFile.name} extends GenericService<${fileInfoMap.modelClassFile.packageName}.${fileInfoMap.modelClassFile.name}, Long> {
+}

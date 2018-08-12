@@ -1,0 +1,20 @@
+package ${fileInfoMap.modelClassFile.packageName};
+
+import org.springframework.stereotype.Component;
+
+@Component("${table.multipleTableNames.dbNameUpper}_MODEL")
+public class ${fileInfoMap.modelClassFile.name} {
+
+	<#list table.columns as column>
+		private ${column.multipleColumnType.modelType} ${column.multipleColumnNames.modelName};
+	</#list>
+	<#list table.columns as column>
+		public ${column.multipleColumnType.modelType} get${column.multipleColumnNames.modelNameFirstUp}() {
+	        return ${column.multipleColumnNames.modelName};
+	    }
+	
+	    public void set${column.multipleColumnNames.modelNameFirstUp}(${column.multipleColumnType.modelType} ${column.multipleColumnNames.modelName}) {
+	        this.${column.multipleColumnNames.modelName} = ${column.multipleColumnNames.modelName};
+	    }
+	</#list>
+}

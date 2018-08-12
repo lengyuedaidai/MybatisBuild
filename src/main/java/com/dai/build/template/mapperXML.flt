@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="${packageDao}.${mapperName}">
+    <resultMap id="BaseResultMap" type="${packageModel}.${ModelName}">
+    	<#list table.columns as column>
+    		<#if column.columnName==table.primaryKeyColumn.columnName>
+    			<id column="${column.columnName}" property="${column.columnaAllName.modelName}" jdbcType="${column.columnType}" />
+    		<#else>
+    			<result column="${column.columnName}" property="${column.columnaAllName.modelName}" jdbcType="${column.columnType}" />
+    		</#if>
+    	</#list>
+    </resultMap>
+     <sql id="Base_Column_List">
+       <trim prefix="" suffix="" suffixOverrides=",">
+     	<#list table.columns as column>
+     		${column.columnName},
+    	</#list>
+    	</trim>
+    </sql>
+    <!--增加数据 insertSelective-->
+    <insert id="insertSelective" parameterType="${packageModel}.${ModelName}">
+        insert into ${table.tableName}
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+        	<#list table.columns as column>
+        		<if test="${column.columnaAllName.modelName} != null">
+                	${column.columnName},
+            	</if>
+        	</#list>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+        	<#list table.columns as column>
+        		<if test="${column.columnName} != null">
+        			${r"#{"}${column.columnaAllName.modelName},jdbcType=${column.columnType}},
+            	</if>
+        	</#list>
+        </trim>
+    </insert>
+    <!--删除数据 deleteByPrimaryKeySelective-->
+    <delete id="deleteByPrimaryKeySelective" parameterType="${packageModel}.${ModelName}">
+        delete from ${table.tableName}
+        where ${table.primaryKeyColumn.columnName} = ${r"#{"}${table.primaryKeyColumn.columnaAllName.modelName},jdbcType=${table.primaryKeyColumn.columnType}}
+    </delete>
+    <!--修改数据 updateByPrimaryKeySelective-->
+    <update id="updateByPrimaryKeySelective" parameterType="${packageModel}.${ModelName}">
+        update ${table.tableName}
+        <set>
+        	<#list table.columns as column>
+        		<if test="${column.columnaAllName.modelName} != null">
+                	${column.columnName} = ${r"#{"}${table.primaryKeyColumn.columnaAllName.modelName},jdbcType=${table.primaryKeyColumn.columnType}},
+            	</if>
+        	</#list>
+        </set>
+        where  ${table.primaryKeyColumn.columnName} = ${r"#{"}${table.primaryKeyColumn.columnaAllName.modelName},jdbcType=${table.primaryKeyColumn.columnType}}
+    </update>
+    <select id="selectByParam" resultMap="BaseResultMap" parameterType="${SelectParamClass}">
+        select
+        	<include refid="Base_Column_List" />
+        from ${table.tableName}
+        <if test="where != null">
+              ${r'${where}'}
+        </if>
+        <if test="order != null">
+            order by ${r'${order}'}
+        </if>
+    </select>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="${table.primaryKeyColumn.modelType}">
+        select
+        <include refid="Base_Column_List" />
+        from ${table.tableName}
+        where ${table.primaryKeyColumn.columnName} = ${r"#{"}${table.primaryKeyColumn.columnaAllName.modelName},jdbcType=${table.primaryKeyColumn.columnType}}
+    </select>
+      <select id="selectByParamAndPage" resultMap="BaseResultMap" parameterType="${SelectParamClass}">
+        select
+        	<include refid="Base_Column_List" />
+        from ${table.tableName}
+        <if test="where != null">
+              ${r'${where}'}
+        </if>
+        <if test="order != null">
+            order by ${r'${order}'}
+        </if>
+    </select>
+    
+</mapper>

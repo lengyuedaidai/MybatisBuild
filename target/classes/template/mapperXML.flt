@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="${packageDao}.${mapperName}">
-    <resultMap id="BaseResultMap" type="${packageModel}.${ModelName}">
+<mapper namespace="${fileInfoMap.mapperClassFile.packageName}.${fileInfoMap.mapperClassFile.name}">
+    <resultMap id="BaseResultMap" type="${fileInfoMap.modelClassFile.packageName}.${fileInfoMap.modelClassFile.name}">
     	<#list table.columns as column>
-    		<#if column.columnName==table.primaryKeyColumn.columnName>
-    			<id column="${column.columnName}" property="${column.modelName}" jdbcType="${column.columnType}" />
+    		<#if column.isKey>
+    			<id column="${column.columnName}" property="${column.multipleColumnNames.modelName}" jdbcType="${column.columnType}" />
     		<#else>
-    			<result column="${column.columnName}" property="${column.modelName}" jdbcType="${column.columnType}" />
+    			<result column="${column.columnName}" property="${column.multipleColumnNames.modelName}" jdbcType="${column.columnType}" />
     		</#if>
     	</#list>
     </resultMap>
@@ -18,67 +18,104 @@
     	</trim>
     </sql>
     <!--增加数据 insertSelective-->
-    <insert id="insertSelective" parameterType="${packageModel}.${ModelName}">
+    <insert id="insertSelective" parameterType="${fileInfoMap.modelClassFile.packageName}.${fileInfoMap.modelClassFile.name}">
         insert into ${table.tableName}
         <trim prefix="(" suffix=")" suffixOverrides=",">
         	<#list table.columns as column>
-        		<if test="${column.modelName} != null">
+        		<if test="${column.multipleColumnNames.modelName} != null">
                 	${column.columnName},
             	</if>
         	</#list>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
         	<#list table.columns as column>
-        		<if test="${column.columnName} != null">
-        			${r"#{"}${column.modelName},jdbcType=${column.columnType}},
+        		<if test="${column.multipleColumnNames.modelName} != null">
+        			${r"#{"}${column.multipleColumnNames.modelName},jdbcType=${column.columnType}},
             	</if>
         	</#list>
         </trim>
     </insert>
     <!--删除数据 deleteByPrimaryKeySelective-->
-    <delete id="deleteByPrimaryKeySelective" parameterType="${packageModel}.${ModelName}">
+    <delete id="deleteByPrimaryKeySelective" parameterType="${fileInfoMap.modelClassFile.packageName}.${fileInfoMap.modelClassFile.name}">
         delete from ${table.tableName}
-        where ${table.primaryKeyColumn.columnName} = ${r"#{"}${table.primaryKeyColumn.modelName},jdbcType=${table.primaryKeyColumn.columnType}}
+        where
+		<#list table.columns as column>
+    		<#list table.primaryKeys as pk>
+        		<#if column.columnName==pk>
+        			<#if pk_index != 0> and </#if>${column.columnName} = ${r"#{"}${column.multipleColumnNames.modelName},jdbcType=${column.columnType}}
+            	</#if>
+        	</#list>
+    	</#list>
     </delete>
+    <delete id="deleteByIds" parameterType="java.lang.String">
+		delete
+		from ${table.tableName}
+		where
+		<#list table.columns as column>
+    		<#list table.primaryKeys as pk>
+        		<#if column.columnName==pk>
+        			<#if pk_index != 0> and </#if>${column.columnName} in ${r"(${_parameter})"}
+            	</#if>
+        	</#list>
+    	</#list>
+	</delete>
     <!--修改数据 updateByPrimaryKeySelective-->
-    <update id="updateByPrimaryKeySelective" parameterType="${packageModel}.${ModelName}">
+    <update id="updateByPrimaryKeySelective" parameterType="${fileInfoMap.modelClassFile.packageName}.${fileInfoMap.modelClassFile.name}">
         update ${table.tableName}
         <set>
         	<#list table.columns as column>
-        		<if test="${column.modelName} != null">
-                	${column.columnName} = ${r"#{"}${table.primaryKeyColumn.modelName},jdbcType=${table.primaryKeyColumn.columnType}},
+        		<if test="${column.multipleColumnNames.modelName} != null">
+                	${column.columnName} = ${r"#{"}${column.multipleColumnNames.modelName},jdbcType=${column.columnType}},
             	</if>
         	</#list>
         </set>
-        where  ${table.primaryKeyColumn.columnName} = ${r"#{"}${table.primaryKeyColumn.modelName},jdbcType=${table.primaryKeyColumn.columnType}}
+        where 
+    	<#list table.columns as column>
+    		<#list table.primaryKeys as pk>
+        		<#if column.columnName==pk>
+        			<#if pk_index != 0> and </#if>${column.columnName} = ${r"#{"}${column.multipleColumnNames.modelName},jdbcType=${column.columnType}}
+            	</#if>
+        	</#list>
+    	</#list>
     </update>
-    <select id="selectByParam" resultMap="BaseResultMap" parameterType="${SelectParamClass}">
+    
+     <select id="selectByWhereParam" resultMap="BaseResultMap" parameterType="com.account.gms.core.feature.orm.mybatis.WhereParam">
         select
         	<include refid="Base_Column_List" />
-        from ${table.tableName}
-        <if test="where != null">
-              ${r'${where}'}
+        from ${table.tableName} 
+        <if test="whereString != null">
+              where ${r'${whereString}'}
         </if>
-        <if test="order != null">
-            order by ${r'${order}'}
-        </if>
+        <if test="orderbyString != null">
+			order by ${r'${orderbyString}'}
+		</if>
     </select>
-    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="${table.primaryKeyColumn.modelType}">
+
+	 <select id="selectByWhereParamAndPage" resultMap="BaseResultMap" parameterType="com.account.gms.core.feature.orm.mybatis.WhereParam">
         select
         <include refid="Base_Column_List" />
-        from ${table.tableName}
-        where ${table.primaryKeyColumn.columnName} = ${r"#{"}${table.primaryKeyColumn.modelName},jdbcType=${table.primaryKeyColumn.columnType}}
+        from ${table.tableName} 
+        <if test="whereString != null">
+              where ${r'${whereString}'}
+        </if>
+        <if test="orderbyString != null">
+			order by ${r'${orderbyString}'}
+		</if>
     </select>
-      <select id="selectByParamAndPage" resultMap="BaseResultMap" parameterType="${SelectParamClass}">
+    
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
         select
-        	<include refid="Base_Column_List" />
-        from ${table.tableName}
-        <if test="where != null">
-              ${r'${where}'}
-        </if>
-        <if test="order != null">
-            order by ${r'${order}'}
-        </if>
+        <include refid="Base_Column_List" />
+        from ${table.tableName} 
+        where  
+		<#list table.columns as column>
+    		<#list table.primaryKeys as pk>
+        		<#if column.columnName==pk>
+        			<#if pk_index != 0> and </#if>${column.columnName} = ${r"#{"}${column.multipleColumnNames.modelName},jdbcType=${column.columnType}}
+            	</#if>
+        	</#list>
+    	</#list>
     </select>
+    
     
 </mapper>

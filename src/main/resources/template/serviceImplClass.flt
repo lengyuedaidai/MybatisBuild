@@ -1,0 +1,24 @@
+package ${fileInfoMap.serviceImplClassFile.packageName};
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import com.account.gms.core.generic.GenericDao;
+import com.account.gms.core.generic.GenericServiceImpl;
+import ${fileInfoMap.mapperClassFile.packageName}.${fileInfoMap.mapperClassFile.name};
+import ${fileInfoMap.modelClassFile.packageName}.${fileInfoMap.modelClassFile.name};
+import ${fileInfoMap.serviceClassFile.packageName}.${fileInfoMap.serviceClassFile.name};
+
+@Service("${table.multipleTableNames.dbNameUpper}_SERVICE")
+public class ${fileInfoMap.serviceImplClassFile.name} extends GenericServiceImpl<${fileInfoMap.modelClassFile.name}, Long> implements ${fileInfoMap.serviceClassFile.name} {
+
+    @Resource
+    private ${fileInfoMap.mapperClassFile.name} mapper;
+
+
+    @Override
+    public GenericDao<${fileInfoMap.modelClassFile.name}, Long> getDao() {
+        return mapper;
+    }
+}

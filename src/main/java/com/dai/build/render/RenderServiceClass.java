@@ -9,12 +9,12 @@ import com.dai.build.entity.FileInfo;
  * @author Dai
  *
  */
-public class RenderMapperXML extends RenderBase {
+public class RenderServiceClass extends RenderBase {
 
 	/**
 	 * @throws IOException
 	 */
-	public RenderMapperXML(RenderParam param) throws IOException {
+	public RenderServiceClass(RenderParam param) throws IOException {
 		super(param);
 	}
 
@@ -27,7 +27,7 @@ public class RenderMapperXML extends RenderBase {
 	 */
 	@Override
 	public FileInfo getFileInfoByParam(RenderParam param) {
-		return param.getFileInfo("mapperXMLFile");
+		return param.getFileInfo("serviceClassFile");
 	}
 
 }

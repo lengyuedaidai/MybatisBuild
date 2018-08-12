@@ -4,7 +4,7 @@
 ## 主要基本目录架构:
 
 ```
-test/java/com/tpt/vehicle/test/build/
+src/java/com/dai/build/
 ├── entity/    ##构建用的实例bean
 ├── JDBC/      ##数据库交互，获取表结构
 ├── main/                        ## 入口
@@ -17,36 +17,44 @@ test/resources/daoBuildConfig.properties # 配置文件
 
 ## 配置文件
 ```
-###JDBC配置
+#JDBC配置
 jdbc.driver=com.mysql.jdbc.Driver
-jdbc.url=jdbc:mysql://127.0.0.1:3306/vehicle?useUnicode=true&characterEncoding=UTF-8&createDatabaseIfNotExist=true
+jdbc.url=jdbc:mysql://localhost:3306/jigsaw?useUnicode=true&characterEncoding=UTF-8&createDatabaseIfNotExist=true
 jdbc.username=root
 jdbc.password=root
-###Dao文件相关配置
-model.package = com.tpt.vehicle.web.model
+###oracle
+#jdbc.driver=oracle.jdbc.OracleDriver
+#jdbc.url=jdbc:oracle:thin:@localhost:1521:orcl
+#jdbc.username=demo
+#jdbc.password=demo
+
+#参数配置
+model.package = com.dai.jigsaw.web.model
 model.template=template/modelClass.flt
 
-mapper.package = com.tpt.vehicle.web.dao
+mapper.package = com.dai.jigsaw.web.dao
 mapper.template=template/mapperClass.flt
 
-mapperXML.package = com.tpt.vehicle.web.dao
+mapperXML.package = com.dai.jigsaw.web.dao
 mapperXML.template=template/mapperXML.flt
 
-service.package = com.tpt.vehicle.web.service
+service.package = com.dai.jigsaw.web.service
 service.template=template/serviceClass.flt
 
-serviceImpl.package = com.tpt.vehicle.web.service.impl
+serviceImpl.package = com.dai.jigsaw.web.service.impl
 serviceImpl.template=template/serviceImplClass.flt
-###项目包路径
-target.project=src/main/java
-###创建表名
-build.table=my_test
-###是创建还是删除，创建Dao文件为create，删除已创建好的为delete
+#项目包路径，可以是当前项目的相对路径：src\\main\\java
+target.project=H:\\aa
+#创建表名,多个表的话用逗号隔开
+build.table=t_user,t_role,t_org,t_perm_func,t_role_perm,t_user_role
+#是创建还是删除，创建Dao文件为create，删除已创建好的为delete
 build.type=create
-###若文件存在是否覆盖
-build.overwrite=create
+#若文件存在是否覆盖
+build.overwrite=true
+#model,mapper,mapperXML,service,serviceImpl
+use.type=model,mapper,mapperXML,service,serviceImpl
 ```
 ## 使用说明：
-1. 修改配置文件build.table属性为你要生成Dao层的对应表名
-2. 运行DaoBuildMain.java类，将会生成文件到相应目录
-3. 测试新表的增删改查
+1. 修改resources/template下的模版，修改成可适用于你项目的模版
+2. 修改配置文件daoBuildConfig.properties，根据说明进行配置
+3. 运行DaoBuildMain.java类，将会生成文件到相应目录

@@ -55,7 +55,7 @@ build.table=t_user,t_role,t_org,t_perm_func,t_role_perm,t_user_role
 build.type=create
 #若文件存在是否覆盖
 build.overwrite=true
-#model,mapper,mapperXML,service,serviceImpl
+#如果不要某类可以不写 model,mapper,mapperXML,service,serviceImpl
 use.type=model,mapper,mapperXML,service,serviceImpl
 ```
 ## 模版参数说明：

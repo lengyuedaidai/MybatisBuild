@@ -11,8 +11,8 @@ src/java/com/dai/build/
 │   │	├── DaoBuildMain.java       ## 构建运行入口
 └── render               ## 模版渲染层
 
-test/resources/template ##构建模版目录
-test/resources/daoBuildConfig.properties # 配置文件
+src/resources/template ##构建模版目录
+src/resources/daoBuildConfig.properties # 配置文件
 ```
 ## 使用说明：
 1. 修改resources/template下的模版，修改成可适用于你项目的模版

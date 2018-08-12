@@ -15,7 +15,7 @@ test/resources/template ##构建模版目录
 test/resources/daoBuildConfig.properties # 配置文件
 ```
 
-##配置文件
+## 配置文件
 ```
 ###JDBC配置
 jdbc.driver=com.mysql.jdbc.Driver
@@ -46,7 +46,7 @@ build.type=create
 ###若文件存在是否覆盖
 build.overwrite=create
 ```
-##使用说明：
+## 使用说明：
 1. 修改配置文件build.table属性为你要生成Dao层的对应表名
 2. 运行DaoBuildMain.java类，将会生成文件到相应目录
 3. 测试新表的增删改查
